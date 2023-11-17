@@ -9,20 +9,20 @@ import com.crud.spring.usuario.exception.NotFoundException;
 class NotFoundExceptionTest {
 
 	@Test
-    public void testDefaultConstructor() {
-        NotFoundException exception = new NotFoundException();
+    public void testConstructor() {
+        NotFoundException excepcion = new NotFoundException();
 
-        assertThat(exception).isInstanceOf(NotFoundException.class);
-        assertThat(exception.getMessage()).isNull();
+        assertThat(excepcion).isInstanceOf(NotFoundException.class);
+        assertThat(excepcion.getMessage()).isNull();
     }
 
-    @Test
-    public void testConstructorWithMessage() {
-        String errorMessage = "Recurso no encontrado";
-        NotFoundException exception = new NotFoundException(errorMessage);
+	@Test
+    public void testConstructorConMensaje() {
+        String error = "Recurso no encontrado";
+        NotFoundException excepcion = new NotFoundException(error);
 
-        assertThat(exception).isInstanceOf(NotFoundException.class);
-        assertThat(exception.getMessage()).isEqualTo(errorMessage);
+        assertThat(excepcion).isInstanceOf(NotFoundException.class);
+        assertThat(excepcion.getMessage()).isEqualTo(error);
     }
     
 }

@@ -9,20 +9,20 @@ import com.crud.spring.usuario.exception.BadRequestException;
 class BadRequestExceptionTest {
 	
     @Test
-    public void testDefaultConstructor() {
-        BadRequestException exception = new BadRequestException();
+    public void testConstructor() {
+        BadRequestException excepcion = new BadRequestException();
 
-        assertThat(exception).isInstanceOf(BadRequestException.class);
-        assertThat(exception.getMessage()).isNull();
+        assertThat(excepcion).isInstanceOf(BadRequestException.class);
+        assertThat(excepcion.getMessage()).isNull();
     }
 
     @Test
-    public void testConstructorWithMessage() {
-        String errorMessage = "Solicitud incorrecta";
-        BadRequestException exception = new BadRequestException(errorMessage);
+    public void testConstructorConMensaje() {
+        String error = "Solicitud incorrecta";
+        BadRequestException excepcion = new BadRequestException(error);
 
-        assertThat(exception).isInstanceOf(BadRequestException.class);
-        assertThat(exception.getMessage()).isEqualTo(errorMessage);
+        assertThat(excepcion).isInstanceOf(BadRequestException.class);
+        assertThat(excepcion.getMessage()).isEqualTo(error);
     }
 
 }

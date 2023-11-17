@@ -31,7 +31,7 @@ public class UsuarioServiceImplTest {
 	private UsuarioServiceImpl usuarioService;
 
 	@Test
-	public void shouldReturnAllUsers() {
+	public void retornarUsuariosTest() {
 		Mockito.when(usuarioRepository.findAll())
 				.thenReturn(Arrays.asList(new Usuario(1L, "John", "Doe", "john.doe@hotmail.com"),
 						new Usuario(2L, "Jane", "Doe", "jane.doe@hotmail.com")));
@@ -40,7 +40,7 @@ public class UsuarioServiceImplTest {
 	}
 
 	@Test
-	public void shouldReturnUserById() {
+	public void retornarUsuarioPorIdTest() {
 		Mockito.when(usuarioRepository.findById(1L))
 				.thenReturn(Optional.of(new Usuario(1L, "John", "Doe", "john.doe@hotmail.com")));
 
@@ -50,7 +50,7 @@ public class UsuarioServiceImplTest {
 	}
 
 	@Test
-	public void shouldCreateUser() {
+	public void crearUsuarioTest() {
 		Usuario usuario = new Usuario();
 		usuario.setNombre("John");
 		usuario.setApellido("Doe");
@@ -58,101 +58,99 @@ public class UsuarioServiceImplTest {
 
 		usuarioService.crearUsuario(usuario);
 
-		// Verificar que el método save del repositorio fue llamado con el usuario
-		// adecuado
 		verify(usuarioRepository, Mockito.times(1)).save(any(Usuario.class));
 	}
 	
 	@Test
-    public void shouldThrowExceptionForNullName() {
+    public void retornarExcepcionPorNombreNullTest() {
         Usuario usuario = new Usuario();
         usuario.setApellido("Doe");
         usuario.setCorreo("john.doe@hotmail.com");
 
-        BadRequestException exception = assertThrows(BadRequestException.class,
+        BadRequestException excepcion = assertThrows(BadRequestException.class,
                 () -> usuarioService.crearUsuario(usuario));
 
-        assertThat(exception.getMessage()).isEqualTo("Nombre inválido");
+        assertThat(excepcion.getMessage()).isEqualTo("Nombre inválido");
     }
 	
 	@Test
-    public void shouldThrowExceptionForEmptyName() {
+    public void retornarExcepcionPorNombreVacioTest() {
         Usuario usuario = new Usuario();
         usuario.setNombre("");
         usuario.setApellido("Doe");
         usuario.setCorreo("john.doe@hotmail.com");
 
-        BadRequestException exception = assertThrows(BadRequestException.class,
+        BadRequestException excepcion = assertThrows(BadRequestException.class,
                 () -> usuarioService.crearUsuario(usuario));
 
-        assertThat(exception.getMessage()).isEqualTo("Nombre inválido");
+        assertThat(excepcion.getMessage()).isEqualTo("Nombre inválido");
     }
 	
 	@Test
-    public void shouldThrowExceptionForNullApellido() {
+    public void retornarExcepcionPorApellidoNullTest() {
         Usuario usuario = new Usuario();
         usuario.setNombre("John");
         usuario.setCorreo("john.doe@hotmail.com");
 
-        BadRequestException exception = assertThrows(BadRequestException.class,
+        BadRequestException excepcion = assertThrows(BadRequestException.class,
                 () -> usuarioService.crearUsuario(usuario));
 
-        assertThat(exception.getMessage()).isEqualTo("Apellido inválido");
+        assertThat(excepcion.getMessage()).isEqualTo("Apellido inválido");
     }
 	
 	@Test
-    public void shouldThrowExceptionForEmptyApellido() {
+    public void retornarExcepcionPorApellidoVacioTest() {
         Usuario usuario = new Usuario();
         usuario.setNombre("John");
         usuario.setApellido("");
         usuario.setCorreo("john.doe@hotmail.com");
 
-        BadRequestException exception = assertThrows(BadRequestException.class,
+        BadRequestException excepcion = assertThrows(BadRequestException.class,
                 () -> usuarioService.crearUsuario(usuario));
 
-        assertThat(exception.getMessage()).isEqualTo("Apellido inválido");
+        assertThat(excepcion.getMessage()).isEqualTo("Apellido inválido");
     }
 	
 	@Test
-    public void shouldThrowExceptionForNullEmail() {
+    public void retornarExcepcionPorCorreoNullTest() {
         Usuario usuario = new Usuario();
         usuario.setNombre("John");
         usuario.setApellido("Doe");
 
-        BadRequestException exception = assertThrows(BadRequestException.class,
+        BadRequestException excepcion = assertThrows(BadRequestException.class,
                 () -> usuarioService.crearUsuario(usuario));
 
-        assertThat(exception.getMessage()).isEqualTo("Correo inválido");
+        assertThat(excepcion.getMessage()).isEqualTo("Correo inválido");
     }
 	
 	@Test
-    public void shouldThrowExceptionForNoHotmailEmail() {
+    public void retornarExcepcionPorCorreoNoHotmailTest() {
         Usuario usuario = new Usuario();
         usuario.setNombre("John");
         usuario.setApellido("Doe");
         usuario.setCorreo("john.doe@hotmail");
 
-        BadRequestException exception = assertThrows(BadRequestException.class,
+        BadRequestException excepcion = assertThrows(BadRequestException.class,
                 () -> usuarioService.crearUsuario(usuario));
 
-        assertThat(exception.getMessage()).isEqualTo("Correo inválido");
+        assertThat(excepcion.getMessage()).isEqualTo("Correo inválido");
     }
 	
 	@Test
-    public void shouldThrowExceptionForEmptyEmail() {
+    public void retornarExcepcionPorCorreoVacioTest() {
         Usuario usuario = new Usuario();
         usuario.setNombre("John");
         usuario.setApellido("Doe");
         usuario.setCorreo("");
 
-        BadRequestException exception = assertThrows(BadRequestException.class,
+        BadRequestException excepcion = assertThrows(BadRequestException.class,
                 () -> usuarioService.crearUsuario(usuario));
 
-        assertThat(exception.getMessage()).isEqualTo("Correo inválido");
+        assertThat(excepcion.getMessage()).isEqualTo("Correo inválido");
     }
 	
 	@Test
-	public void shouldUpdateUser() {
+	public void actualizarUsuarioTest() {
 		Usuario usuarioExistente = new Usuario();
 		usuarioExistente.setId(1L);
 		usuarioExistente.setNombre("John");
@@ -168,17 +166,13 @@ public class UsuarioServiceImplTest {
 		Mockito.when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuarioExistente));
 		usuarioService.actualizarUsuario(1L, usuarioActualizado);
 
-		// Verificar que el método save del repositorio fue llamado con el usuario
-		// actualizado
 		verify(usuarioRepository, Mockito.times(1)).save(eq(usuarioActualizado));
 	}
 
 	@Test
-	public void shouldDeleteUser() {
+	public void eliminarUsuarioTest() {
 		usuarioService.eliminarUsuario(1L);
 
-		// Verificar que el método deleteById del repositorio fue llamado con el ID
-		// correcto
 		verify(usuarioRepository, Mockito.times(1)).deleteById(1L);
 	}
 

@@ -32,23 +32,23 @@ public class UsuarioControllerTest {
     private UsuarioService usuarioService;
 
     @Test
-    public void shouldReturnAllUsers() throws Exception {
+    public void retornarUsuariosTest() throws Exception {
         Mockito.when(usuarioService.obtenerTodosLosUsuarios()).thenReturn(Arrays.asList(
                 new Usuario(1L, "John", "Doe", "john.doe@hotmail.com"),
                 new Usuario(2L, "Jane", "Doe", "jane.doe@hotmail.com")
         ));
 
-        ResultActions result = mockMvc.perform(get("/api/usuarios")
+        ResultActions resultado = mockMvc.perform(get("/api/usuarios")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        result.andExpect(status().isOk())
+        resultado.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].nombre").value("John"))
                 .andExpect(jsonPath("$[1].nombre").value("Jane"));
     }
     
     @Test
-    public void shouldCreateUser() throws Exception {
+    public void crearUsuariosTest() throws Exception {
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setNombre("John");
         nuevoUsuario.setApellido("Doe");
@@ -56,18 +56,18 @@ public class UsuarioControllerTest {
 
         Mockito.when(usuarioService.crearUsuario(any(Usuario.class))).thenReturn(nuevoUsuario);
 
-        ResultActions result = mockMvc.perform(post("/api/usuarios")
+        ResultActions resultado = mockMvc.perform(post("/api/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(nuevoUsuario)));
 
-        result.andExpect(status().isOk())
+        resultado.andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre").value("John"))
                 .andExpect(jsonPath("$.apellido").value("Doe"))
                 .andExpect(jsonPath("$.correo").value("john.doe@hotmail.com"));
     }
 	
     @Test
-    public void shouldUpdateUser() throws Exception {
+    public void actualizarUsuarioTest() throws Exception {
         Usuario usuarioExistente = new Usuario();
         usuarioExistente.setId(1L);
         usuarioExistente.setNombre("John");
@@ -83,16 +83,16 @@ public class UsuarioControllerTest {
         Mockito.when(usuarioService.obtenerUsuarioPorId(1L)).thenReturn(usuarioExistente);
         Mockito.when(usuarioService.actualizarUsuario(eq(1L), any(Usuario.class))).thenReturn(usuarioActualizado);
 
-        ResultActions result = mockMvc.perform(put("/api/usuarios/1")
+        ResultActions resultado = mockMvc.perform(put("/api/usuarios/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(usuarioActualizado)));
 
-        result.andExpect(status().isOk())
+        resultado.andExpect(status().isOk())
                 .andExpect(jsonPath("$.correo").value("john.maximo@hotmail.com"));
     }
     
     @Test
-    public void shouldGetUserById() throws Exception {
+    public void obtenerUsuarioPorIdTest() throws Exception {
         Usuario usuario = new Usuario();
         usuario.setId(1L);
         usuario.setNombre("John");
@@ -101,17 +101,17 @@ public class UsuarioControllerTest {
 
         Mockito.when(usuarioService.obtenerUsuarioPorId(1L)).thenReturn(usuario);
 
-        ResultActions result = mockMvc.perform(get("/api/usuarios/1")
+        ResultActions resultado = mockMvc.perform(get("/api/usuarios/1")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        result.andExpect(status().isOk())
+        resultado.andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre").value("John"))
                 .andExpect(jsonPath("$.apellido").value("Doe"))
                 .andExpect(jsonPath("$.correo").value("john.doe@hotmail.com"));
     }
     
     @Test
-    public void shouldDeleteUser() throws Exception {
+    public void eliminarUsuarioTest() throws Exception {
         mockMvc.perform(delete("/api/usuarios/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
