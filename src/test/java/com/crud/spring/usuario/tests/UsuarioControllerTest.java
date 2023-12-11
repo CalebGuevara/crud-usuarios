@@ -16,107 +16,107 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-import com.crud.spring.usuario.controller.UsuarioController;
-import com.crud.spring.usuario.entidad.Usuario;
-import com.crud.spring.usuario.service.UsuarioService;
+import com.crud.spring.usuario.controller.UserController;
+import com.crud.spring.usuario.entity.User;
+import com.crud.spring.usuario.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-@WebMvcTest(UsuarioController.class)
+@WebMvcTest(UserController.class)
 public class UsuarioControllerTest {
 	
 	@Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UsuarioService usuarioService;
+    private UserService userService;
 
     @Test
-    public void retornarUsuariosTest() throws Exception {
-        Mockito.when(usuarioService.obtenerTodosLosUsuarios()).thenReturn(Arrays.asList(
-                new Usuario(1L, "John", "Doe", "john.doe@hotmail.com"),
-                new Usuario(2L, "Jane", "Doe", "jane.doe@hotmail.com")
+    public void returnUsersTest() throws Exception {
+        Mockito.when(userService.getAllUsers()).thenReturn(Arrays.asList(
+                new User(1L, "John", "Doe", "john.doe@hotmail.com"),
+                new User(2L, "Jane", "Doe", "jane.doe@hotmail.com")
         ));
 
-        ResultActions resultado = mockMvc.perform(get("/api/usuarios")
+        ResultActions resultado = mockMvc.perform(get("/api/users")
                 .contentType(MediaType.APPLICATION_JSON));
 
         resultado.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].nombre").value("John"))
-                .andExpect(jsonPath("$[1].nombre").value("Jane"));
+                .andExpect(jsonPath("$[0].name").value("John"))
+                .andExpect(jsonPath("$[1].name").value("Jane"));
     }
     
     @Test
-    public void crearUsuariosTest() throws Exception {
-        Usuario nuevoUsuario = new Usuario();
-        nuevoUsuario.setNombre("John");
-        nuevoUsuario.setApellido("Doe");
-        nuevoUsuario.setCorreo("john.doe@hotmail.com");
+    public void createUsersTest() throws Exception {
+        User nUser = new User();
+        nUser.setName("John");
+        nUser.setLastName("Doe");
+        nUser.setEmail("john.doe@hotmail.com");
 
-        Mockito.when(usuarioService.crearUsuario(any(Usuario.class))).thenReturn(nuevoUsuario);
+        Mockito.when(userService.createUser(any(User.class))).thenReturn(nUser);
 
-        ResultActions resultado = mockMvc.perform(post("/api/usuarios")
+        ResultActions resultado = mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(nuevoUsuario)));
+                .content(new ObjectMapper().writeValueAsString(nUser)));
 
         resultado.andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre").value("John"))
-                .andExpect(jsonPath("$.apellido").value("Doe"))
-                .andExpect(jsonPath("$.correo").value("john.doe@hotmail.com"));
+                .andExpect(jsonPath("$.name").value("John"))
+                .andExpect(jsonPath("$.lastName").value("Doe"))
+                .andExpect(jsonPath("$.email").value("john.doe@hotmail.com"));
     }
 	
     @Test
-    public void actualizarUsuarioTest() throws Exception {
-        Usuario usuarioExistente = new Usuario();
-        usuarioExistente.setId(1L);
-        usuarioExistente.setNombre("John");
-        usuarioExistente.setApellido("Doe");
-        usuarioExistente.setCorreo("john.doe@hotmail.com");
+    public void updateUserTest() throws Exception {
+        User userExistent = new User();
+        userExistent.setId(1L);
+        userExistent.setName("John");
+        userExistent.setLastName("Doe");
+        userExistent.setEmail("john.doe@hotmail.com");
 
-        Usuario usuarioActualizado = new Usuario();
-        usuarioActualizado.setId(1L);
-        usuarioActualizado.setNombre("John");
-        usuarioActualizado.setApellido("Doe");
-        usuarioActualizado.setCorreo("john.maximo@hotmail.com");
+        User updatedUser = new User();
+        updatedUser.setId(1L);
+        updatedUser.setName("John");
+        updatedUser.setLastName("Doe");
+        updatedUser.setEmail("john.maximo@hotmail.com");
 
-        Mockito.when(usuarioService.obtenerUsuarioPorId(1L)).thenReturn(usuarioExistente);
-        Mockito.when(usuarioService.actualizarUsuario(eq(1L), any(Usuario.class))).thenReturn(usuarioActualizado);
+        Mockito.when(userService.getUserById(1L)).thenReturn(userExistent);
+        Mockito.when(userService.updateUser(eq(1L), any(User.class))).thenReturn(updatedUser);
 
-        ResultActions resultado = mockMvc.perform(put("/api/usuarios/1")
+        ResultActions resultado = mockMvc.perform(put("/api/users/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(usuarioActualizado)));
+                .content(new ObjectMapper().writeValueAsString(updatedUser)));
 
         resultado.andExpect(status().isOk())
-                .andExpect(jsonPath("$.correo").value("john.maximo@hotmail.com"));
+                .andExpect(jsonPath("$.email").value("john.maximo@hotmail.com"));
     }
     
     @Test
-    public void obtenerUsuarioPorIdTest() throws Exception {
-        Usuario usuario = new Usuario();
-        usuario.setId(1L);
-        usuario.setNombre("John");
-        usuario.setApellido("Doe");
-        usuario.setCorreo("john.doe@hotmail.com");
+    public void getUserByIdTest() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        user.setName("John");
+        user.setLastName("Doe");
+        user.setEmail("john.doe@hotmail.com");
 
-        Mockito.when(usuarioService.obtenerUsuarioPorId(1L)).thenReturn(usuario);
+        Mockito.when(userService.getUserById(1L)).thenReturn(user);
 
-        ResultActions resultado = mockMvc.perform(get("/api/usuarios/1")
+        ResultActions resultado = mockMvc.perform(get("/api/users/1")
                 .contentType(MediaType.APPLICATION_JSON));
 
         resultado.andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre").value("John"))
-                .andExpect(jsonPath("$.apellido").value("Doe"))
-                .andExpect(jsonPath("$.correo").value("john.doe@hotmail.com"));
+                .andExpect(jsonPath("$.name").value("John"))
+                .andExpect(jsonPath("$.lastName").value("Doe"))
+                .andExpect(jsonPath("$.email").value("john.doe@hotmail.com"));
     }
     
     @Test
-    public void eliminarUsuarioTest() throws Exception {
-        mockMvc.perform(delete("/api/usuarios/1")
+    public void deleteUserTest() throws Exception {
+        mockMvc.perform(delete("/api/users/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        Mockito.verify(usuarioService, Mockito.times(1)).eliminarUsuario(1L);
+        Mockito.verify(userService, Mockito.times(1)).deleteUser(1L);
     }
     
 }
